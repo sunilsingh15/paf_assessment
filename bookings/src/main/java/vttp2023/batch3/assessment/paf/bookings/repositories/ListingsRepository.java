@@ -1,8 +1,6 @@
 package vttp2023.batch3.assessment.paf.bookings.repositories;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.bson.Document;
@@ -15,10 +13,12 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import vttp2023.batch3.assessment.paf.bookings.models.Reservation;
 import vttp2023.batch3.assessment.paf.bookings.models.SearchQuery;
 
 @Repository
@@ -83,7 +83,7 @@ public class ListingsRepository {
 	// }
 	// ]
 	// );
-	
+
 	public List<Document> getSearchResults(SearchQuery query) {
 		MatchOperation match = Aggregation.match(Criteria.where("address.country").is(query.getCountry())
 				.and("accommodates").is(query.getNumberOfPersons())
@@ -100,19 +100,19 @@ public class ListingsRepository {
 
 	// TODO: Task 4
 
-	// 	db.getCollection('listings').aggregate(
-	//   [
-	//     { $match: { _id: '13530122' } },
-	//     {
-	//       $project: {
-	//         description: 1,
-	//         address: 1,
-	//         'images.picture_url': 1,
-	//         price: 1,
-	//         amenities: 1
-	//       }
-	//     }
-	//   ]
+	// db.getCollection('listings').aggregate(
+	// [
+	// { $match: { _id: '13530122' } },
+	// {
+	// $project: {
+	// description: 1,
+	// address: 1,
+	// 'images.picture_url': 1,
+	// price: 1,
+	// amenities: 1
+	// }
+	// }
+	// ]
 	// );
 
 	public Document getListingByID(String id) {
@@ -127,5 +127,27 @@ public class ListingsRepository {
 	}
 
 	// TODO: Task 5
+	public Integer checkVacancyByID(String id) {
+		String retrieveVacancySQL = "select vacancy from acc_occupancy where acc_id = ?";
+		List<String> vacancy = jdbcTemplate.queryForList(retrieveVacancySQL, String.class, id);
+
+		return Integer.parseInt(vacancy.get(0));
+	}
+
+	@Transactional
+	public int insertReservation(Reservation reservation) {
+		String insertReservationSQL = "insert into reservations (resv_id, name, email, acc_id, arrival_date, duration) values (?, ?, ?, ?, ?, ?)";
+		String deductVacancySQL = "update acc_occupancy set vacancy = ? where acc_id = ?";
+
+		int updatedVacancy = checkVacancyByID(reservation.getAccomodationID()) - reservation.getDurationOfStay();
+
+		// Insert reservation into table
+		jdbcTemplate.update(insertReservationSQL, reservation.getId(), reservation.getName(),
+				reservation.getEmail(), reservation.getAccomodationID(), reservation.getArrivalDate(),
+				reservation.getDurationOfStay());
+
+		// Update vacancy in occupancy table
+		return jdbcTemplate.update(deductVacancySQL, updatedVacancy, reservation.getAccomodationID());
+	}
 
 }

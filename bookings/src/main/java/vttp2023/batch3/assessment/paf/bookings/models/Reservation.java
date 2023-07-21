@@ -7,6 +7,7 @@ public class Reservation {
     private String id;
     private String name;
     private String email;
+    private String accomodationID;
     private Date arrivalDate;
     private int durationOfStay;
 
@@ -14,10 +15,12 @@ public class Reservation {
 
     }
 
-    public Reservation(String id, String name, String email, Date arrivalDate, int durationOfStay) {
+    public Reservation(String id, String name, String email, String accomodationID, Date arrivalDate,
+            int durationOfStay) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.accomodationID = accomodationID;
         this.arrivalDate = arrivalDate;
         this.durationOfStay = durationOfStay;
     }
@@ -46,6 +49,14 @@ public class Reservation {
         this.email = email;
     }
 
+    public String getAccomodationID() {
+        return accomodationID;
+    }
+
+    public void setAccomodationID(String accomodationID) {
+        this.accomodationID = accomodationID;
+    }
+
     public Date getArrivalDate() {
         return arrivalDate;
     }
@@ -60,6 +71,12 @@ public class Reservation {
 
     public void setDurationOfStay(int durationOfStay) {
         this.durationOfStay = durationOfStay;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation [id=" + id + ", name=" + name + ", email=" + email + ", accomodationID=" + accomodationID
+                + ", arrivalDate=" + arrivalDate + ", durationOfStay=" + durationOfStay + "]";
     }
 
 }
