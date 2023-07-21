@@ -15,10 +15,11 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import vttp2023.batch3.assessment.paf.bookings.models.Query;
+import vttp2023.batch3.assessment.paf.bookings.models.SearchQuery;
 
 @Repository
 public class ListingsRepository {
@@ -40,7 +41,7 @@ public class ListingsRepository {
 	// }
 	// },
 	// { $project: { _id: 0, country: 1 } }
-	// ],
+	// ]
 	// );
 
 	public List<String> getListofCountries() {
@@ -60,6 +61,8 @@ public class ListingsRepository {
 		return countryListString;
 	}
 
+	// TODO: Task 3
+
 	// db.getCollection('listings').aggregate(
 	// [
 	// {
@@ -78,11 +81,10 @@ public class ListingsRepository {
 	// 'images.picture_url': 1
 	// }
 	// }
-	// ],
+	// ]
 	// );
-
-	// TODO: Task 3
-	public List<Document> getSearchResults(Query query) {
+	
+	public List<Document> getSearchResults(SearchQuery query) {
 		MatchOperation match = Aggregation.match(Criteria.where("address.country").is(query.getCountry())
 				.and("accommodates").is(query.getNumberOfPersons())
 				.and("price").gte(query.getRangeMin()).lte(query.getRangeMax()));
@@ -90,13 +92,39 @@ public class ListingsRepository {
 		SortOperation sort = Aggregation.sort(Sort.by("price").descending());
 
 		ProjectionOperation project = Aggregation.project("address.street", "price", "images.picture_url");
-		
+
 		Aggregation pipeline = Aggregation.newAggregation(match, sort, project);
 
 		return mongoTemplate.aggregate(pipeline, "listings", Document.class).getMappedResults();
 	}
 
 	// TODO: Task 4
+
+	// 	db.getCollection('listings').aggregate(
+	//   [
+	//     { $match: { _id: '13530122' } },
+	//     {
+	//       $project: {
+	//         description: 1,
+	//         address: 1,
+	//         'images.picture_url': 1,
+	//         price: 1,
+	//         amenities: 1
+	//       }
+	//     }
+	//   ]
+	// );
+
+	public Document getListingByID(String id) {
+		MatchOperation match = Aggregation.match(Criteria.where("_id").is(id));
+		ProjectionOperation project = Aggregation.project("description", "address", "images.picture_url",
+				"price", "amenities");
+
+		Aggregation pipeline = Aggregation.newAggregation(match, project);
+
+		return mongoTemplate.aggregate(pipeline, "listings", Document.class).getMappedResults().get(0);
+
+	}
 
 	// TODO: Task 5
 

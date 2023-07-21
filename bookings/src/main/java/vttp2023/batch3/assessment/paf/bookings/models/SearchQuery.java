@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public class Query {
+public class SearchQuery {
 
     @NotNull(message = "Country cannot be null!")
     @NotEmpty(message = "Country cannot be empty!")
@@ -24,10 +24,10 @@ public class Query {
     @Max(value = 1000, message = "Range maximum cannot be more than 1000!")
     private Integer rangeMax;
 
-    public Query() {
+    public SearchQuery() {
     }
 
-    public Query(String country, Integer numberOfPersons, Integer rangeMin, Integer rangeMax) {
+    public SearchQuery(String country, Integer numberOfPersons, Integer rangeMin, Integer rangeMax) {
         this.country = country;
         this.numberOfPersons = numberOfPersons;
         this.rangeMin = rangeMin;

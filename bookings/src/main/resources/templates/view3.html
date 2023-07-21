@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing | MyBNB</title>
+</head>
+
+<body>
+    <a href="javascript:history.back()">Back</a>
+    <br />
+    <br />
+
+    <table th:object="${listing}">
+        <tr>
+            <td>ID:</td>
+            <td th:text="*{_id}"></td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td>
+                <p th:text="*{description}"></p>
+                <img th:src="@{*{picture_url}}" alt="" style="width: 300px;">
+            </td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td>
+                <span th:text="*{address.street}"></span>
+                <br>
+                <span th:text="*{address.suburb}"></span>
+                <br>
+                <span th:text="*{address.country}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Price:</td>
+            <td th:text="*{price}"></td>
+        </tr>
+        <tr>
+            <td>
+                Amenities:
+            </td>
+            <td th:text="*{amenities}"></td>
+        </tr>
+    </table>
+
+    <h2>Bookings</h2>
+
+    <form action="/book" method="post">
+        <table>
+            <tr>
+                <td>
+                    Name:
+                </td>
+                <td>
+                    <input type="text" name="" id="" placeholder="Your name">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email:
+                </td>
+                <td>
+                    <input type="text" name="" id="" placeholder="Your email">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Arrival:
+                </td>
+                <td>
+                    <input type="date" name="" id="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Stay:
+                </td>
+                <td>
+                    <input type="number" name="" id=""> days
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <button type="submit">Book</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

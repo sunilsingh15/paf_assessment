@@ -6,7 +6,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import vttp2023.batch3.assessment.paf.bookings.models.Query;
+import vttp2023.batch3.assessment.paf.bookings.models.SearchQuery;
 import vttp2023.batch3.assessment.paf.bookings.repositories.ListingsRepository;
 
 @Service
@@ -21,12 +21,14 @@ public class ListingsService {
 	}
 	
 	//TODO: Task 3
-	public List<Document> getSearchResults(Query query) {
+	public List<Document> getSearchResults(SearchQuery query) {
 		return repository.getSearchResults(query);
 	}
 
 	//TODO: Task 4
-	
+	public Document getListingByID(String id) {
+		return repository.getListingByID(id);
+	}
 
 	//TODO: Task 5
 
