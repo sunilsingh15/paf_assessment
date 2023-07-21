@@ -1,0 +1,1 @@
+mongoimport --uri ${MONGO_URL} --username ${MONGO_USERNAME} --password ${MONGO_PASSWORD} -d paf -c listings --legacy /Users/sunilsingh/Downloads/projects/03-paf/vttp2023_batch3_paf_assessment/data/listings.json
