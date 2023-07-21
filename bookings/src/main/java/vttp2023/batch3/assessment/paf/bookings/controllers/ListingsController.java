@@ -42,6 +42,9 @@ public class ListingsController {
 			return "view1";
 		}
 
+		model.addAttribute("country", query.getCountry());
+		System.out.println("---------------------------------> " + service.getSearchResults(query));
+		model.addAttribute("searchResults", service.getSearchResults(query));
 		return "view2";
 	}
 
